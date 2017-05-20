@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "scripts": {
+    "example": "pulp build --no-psa --include examples/ --to examples/dist/example.js"
+  }
+}
