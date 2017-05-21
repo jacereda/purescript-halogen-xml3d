@@ -10,9 +10,10 @@
     "purescript-prelude": "^3.0.0",
     "purescript-console": "^3.0.0",
     "purescript-halogen": "^2.0.0",
-    "purescript-dom-xml3d": "*"
+    "purescript-dom-xml3d": "git://github.com/jacereda/purescript-dom-xml3d.git#master"
   },
   "devDependencies": {
+    "purescript-debug": "*",
     "purescript-psci-support": "^3.0.0"
   }
 }
