@@ -65,7 +65,7 @@ example =
                 ]
         []
       , XH.group [ XP.material "#orangePhong" ]
-        [ XH.mesh [XP.src "teapot.json"]
+        [ XH.mesh [XP.src "http://xml3d.github.io/xml3d-examples/examples/assets/res/teapot/teapot.json"]
           []
         ]
       ]
