@@ -5,6 +5,7 @@ import DOM.HTML.Indexed (CSSPixel)
 import DOM.XML3D.Indexed.Light (LightModel, renderLightModel)
 import DOM.XML3D.Indexed.Material (MatModel, renderMatModel)
 import DOM.XML3D.Indexed.Vec3 (Vec3, renderVec3)
+import DOM.XML3D.Indexed.AxisAngle (AxisAngle, renderAxisAngle)
 import DOM.XML3D.Indexed.View (ViewModel, renderViewModel)
 import Halogen.HTML.Core (AttrName(..))
 import Halogen.HTML.Properties (IProp, attr)
@@ -41,4 +42,7 @@ lightModel = attr (AttrName "model") <<< renderLightModel
 
 translation :: forall r i. Vec3 -> IProp (translation :: Vec3 | r) i
 translation = attr (AttrName "translation") <<< renderVec3
+
+rotation :: forall r i. AxisAngle -> IProp (rotation :: AxisAngle | r) i
+rotation = attr (AttrName "rotation") <<< renderAxisAngle
 
