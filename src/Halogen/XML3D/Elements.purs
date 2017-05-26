@@ -1,8 +1,12 @@
 module Halogen.XML3D.Elements where
 
+import Prelude
 import DOM.XML3D.Indexed as I
-import Halogen.HTML.Core (ElemName(..))
+import DOM.XML3D.Indexed.Vec2 (Vec2, renderVec2)
+import DOM.XML3D.Indexed.Vec3 (Vec3, renderVec3)
+import Halogen.HTML.Core (ElemName(..), HTML, text)
 import Halogen.HTML.Elements (Node, element)
+import Halogen.HTML.Properties (IProp)
 
 
 -- Root element
@@ -59,14 +63,14 @@ _data = element (ElemName "data")
 dataflow :: forall p i. Node I.XML3Ddataflow p i
 dataflow = element (ElemName "dataflow")
 
-float :: forall p i. Node I.XML3Dfloat p i
-float = element (ElemName "float")
+float :: forall p i. Array (IProp I.XML3Dfloat i) -> Array Number -> HTML p i
+float p vs = element (ElemName "float") p $ text <<< show <$> vs
 
-float2 :: forall p i. Node I.XML3Dfloat2 p i
-float2 = element (ElemName "float2")
+float2 :: forall p i. Array (IProp I.XML3Dfloat2 i) -> Array Vec2 -> HTML p i
+float2 p vs = element (ElemName "float2") p $ text <<< renderVec2 <$> vs
 
-float3 :: forall p i. Node I.XML3Dfloat3 p i
-float3 = element (ElemName "float3")
+float3 :: forall p i. Array (IProp I.XML3Dfloat3 i) -> Array Vec3 -> HTML p i
+float3 p vs = element (ElemName "float3") p $ text <<< renderVec3 <$> vs
 
 int :: forall p i. Node I.XML3Dint p i
 int = element (ElemName "int")
@@ -81,6 +85,5 @@ string :: forall p i. Node I.XML3Dbool p i
 string = element (ElemName "string")
 
 texture :: forall p i. Node I.XML3Dtexture p i
-texture = element (ElemName "textre")
-
+texture = element (ElemName "texture")
 

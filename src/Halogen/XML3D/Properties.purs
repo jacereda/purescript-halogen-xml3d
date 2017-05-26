@@ -2,10 +2,12 @@ module Halogen.XML3D.Properties where
 
 import Prelude
 import DOM.HTML.Indexed (CSSPixel)
+import DOM.XML3D.Indexed.AxisAngle (AxisAngle, renderAxisAngle)
 import DOM.XML3D.Indexed.Light (LightModel, renderLightModel)
 import DOM.XML3D.Indexed.Material (MatModel, renderMatModel)
+import DOM.XML3D.Indexed.Mesh (MeshType, renderMeshType)
+import DOM.XML3D.Indexed.Texture (Filter, Wrap, renderFilter, renderWrap)
 import DOM.XML3D.Indexed.Vec3 (Vec3, renderVec3)
-import DOM.XML3D.Indexed.AxisAngle (AxisAngle, renderAxisAngle)
 import DOM.XML3D.Indexed.View (ViewModel, renderViewModel)
 import Halogen.HTML.Core (AttrName(..))
 import Halogen.HTML.Properties (IProp, attr)
@@ -14,7 +16,7 @@ width :: forall r i. CSSPixel -> IProp (width :: CSSPixel | r) i
 width = attr (AttrName "width") <<< show
 
 height :: forall r i. CSSPixel -> IProp (height :: CSSPixel | r) i
-height h = attr (AttrName "height") (show h)
+height = attr (AttrName "height") <<< show
 
 src :: forall r i. String -> IProp (src :: String | r) i
 src = attr (AttrName "src")
@@ -46,3 +48,14 @@ translation = attr (AttrName "translation") <<< renderVec3
 rotation :: forall r i. AxisAngle -> IProp (rotation :: AxisAngle | r) i
 rotation = attr (AttrName "rotation") <<< renderAxisAngle
 
+scale :: forall r i. Vec3 -> IProp (scale :: Vec3 | r) i
+scale = attr (AttrName "scale") <<< renderVec3
+
+_type :: forall r i. MeshType -> IProp (type :: MeshType | r) i
+_type = attr (AttrName "type") <<< renderMeshType
+
+filter :: forall r i. Filter -> IProp (filter :: Filter | r) i
+filter = attr (AttrName "filter") <<< renderFilter
+
+wrap :: forall r i. Wrap -> IProp (wrap :: Wrap | r) i
+wrap = attr (AttrName "wrap") <<< renderWrap
