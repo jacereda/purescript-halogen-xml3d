@@ -21,7 +21,7 @@ import DOM.XML3D.Indexed.Vec3 (Vec3(..))
 import DOM.XML3D.Indexed.View (ViewModel(..))
 import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
-import Debug.Trace (spy)
+import Math (remainder)
 
 type State = { mx :: Int
              , my :: Int
@@ -97,9 +97,9 @@ example =
                        , XP.translation $ Vec3 (-50.0) 50.0 0.0
                        , XP.scale $ Vec3 10.0 10.0 10.0
                        ] []
-        , XH.transform [ XP.id "cubeTransform"
+        , XH.transform [ XP.id "ciccioTransform"
                        , XP.translation $ Vec3 50.0 50.0 0.0
-                       , XP.scale $ Vec3 15.0 15.0 15.0
+                       , XP.scale $ Vec3 1.0 1.0 1.0
                        ] []
         , XH.transform [ XP.id "pitchTransform" 
                        , XP.rotation $ AxisAngle 1.0 0.0 0.0 (fy / 50.0) ] []
@@ -126,11 +126,13 @@ example =
                      ]
              []
            ]
-      , XH.group [ XP.transform "#cubeTransform"
-                 , XP.material "#videoMat"
-                 ] $
-        hp [ XH.mesh [ XP.src $ base <> "assets/res/cube/cube.xml#mesh" ]
-             []
+      , XH.group [ XP.transform "#ciccioTransform" ] $
+        hp [ XH.model [ XP.src $ base2 <> "robots/ciccio.xml#asset" ]
+             [ XH.assetdata [ XP.name "animation" ]
+               [ XH.float [ XP.name "key" ]
+                 [ remainder (s.t / 1000.0) 16.875 ]
+               ]
+             ]
            ]
       , XH.group [ XP.transform "#engineerTransform" ] $
         hp [ XH.model [ XP.src $ base <> "assets/res/assets.xml#engineer" ]
@@ -138,13 +140,14 @@ example =
            ]
       ]
     ]
-    where fx = (s.t / 20.0) + toNumber s.mx
+    where fx = toNumber s.mx
           fy = toNumber s.my
           r = fx / 512.0
           g = fy / 512.0
           b = r + g
           col = Vec3 r g b
           base = "http://xml3d.github.io/xml3d-examples/examples/"
+          base2 = "http://rawgit.com/xml3d/xml3d-examples/master/resources/assets/"
           hp m = [ XH.group [ XP.transform "#headingTransform" ]
                    [ XH.group [ XP.transform "#pitchTransform" ] m ] ]
 
