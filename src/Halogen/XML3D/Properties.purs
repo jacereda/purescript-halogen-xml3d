@@ -9,8 +9,8 @@ import DOM.XML3D.Indexed.Mesh (MeshType, renderMeshType)
 import DOM.XML3D.Indexed.Texture (Filter, Wrap, renderFilter, renderWrap)
 import DOM.XML3D.Indexed.Vec3 (Vec3, renderVec3)
 import DOM.XML3D.Indexed.View (ViewModel, renderViewModel)
-import Halogen.HTML.Core (AttrName(..))
-import Halogen.HTML.Properties (IProp, attr)
+import Halogen.HTML.Core (AttrName(..), PropName(..))
+import Halogen.HTML.Properties (IProp, attr, prop)
 
 width :: forall r i. CSSPixel -> IProp (width :: CSSPixel | r) i
 width = attr (AttrName "width") <<< show
@@ -18,11 +18,11 @@ width = attr (AttrName "width") <<< show
 height :: forall r i. CSSPixel -> IProp (height :: CSSPixel | r) i
 height = attr (AttrName "height") <<< show
 
+id :: forall r i. String -> IProp (id :: String | r) i
+id = prop (PropName "id")
+
 src :: forall r i. String -> IProp (src :: String | r) i
 src = attr (AttrName "src")
-
-id :: forall r i. String -> IProp (id :: String | r) i
-id = attr (AttrName "id")
 
 name :: forall r i. String -> IProp (name :: String | r) i
 name = attr (AttrName "name")

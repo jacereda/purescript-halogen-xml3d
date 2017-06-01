@@ -11,9 +11,7 @@ import Data.Newtype (unwrap)
 head :: forall m. H.Component HH.HTML (Const Void) Unit Void m
 head =
   H.component { initialState: const unit
-              , render: const $ HH.div []
-                [ HH.script [ HP.src "http://www.xml3d.org/xml3d/script/xml3d.js" ] []
-                ]
+              , render: const $ HH.script [ HP.src "http://www.xml3d.org/xml3d/script/xml3d.js" ] []
               , eval: absurd <<< unwrap
               , receiver: const Nothing
               }

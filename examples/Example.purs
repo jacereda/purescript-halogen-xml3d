@@ -1,8 +1,10 @@
 module Example where
 
 import Prelude
+import CSS as C
 import Halogen as H
 import Halogen.HTML as HH
+import Halogen.HTML.CSS as HS
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import Halogen.XML3D.Elements as XH
@@ -18,6 +20,7 @@ import DOM.XML3D.Indexed.Vec3 (Vec3(..))
 import DOM.XML3D.Indexed.View (ViewModel(..))
 import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
+import Halogen.HTML.Core (AttrName(..))
 
 data State = State Int Int
 
@@ -47,8 +50,9 @@ example =
     [ XH.xml3d [ XP.width 800
                , XP.height 600
                , XE.onFrameDrawn (HE.input Drawn)
+               , HS.style $ C.backgroundColor $ C.rgba 0 0 255 1.0
                ]
-      [ XH.defs []        
+      [ XH.defs []
         [ XH.material [ XP.id "mouseMat"
                       , XP.matModel Phong
                       ]
@@ -66,7 +70,7 @@ example =
             [ HH.video [ HP.src $ base <> "../resources/videos/nescafe.mp4"
                        , HP.autoplay true
                        , HP.loop true
-                       , HP.muted true
+                       , HP.attr (AttrName "muted") "true" -- HP.muted true
                        ] []
             ]
           ]

@@ -11,7 +11,8 @@
     "purescript-console": "^3.0.0",
     "purescript-halogen": "^2.0.0",
     "purescript-dom-xml3d": "git://github.com/jacereda/purescript-dom-xml3d.git#master",
-    "purescript-debug": "*"
+    "purescript-debug": "*",
+    "purescript-halogen-css": "^6.0.0"
   },
   "devDependencies": {
     "purescript-debug": "*",
