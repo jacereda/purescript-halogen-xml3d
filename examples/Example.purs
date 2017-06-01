@@ -11,13 +11,8 @@ import Halogen.HTML.Properties as HP
 import Halogen.XML3D.Elements as XH
 import Halogen.XML3D.Events as XE
 import Halogen.XML3D.Properties as XP
-import Control.Monad.Aff (Aff)
-import DOM (DOM)
 import DOM.Event.MouseEvent (MouseEvent, clientX, clientY)
-import DOM.Event.Types (Event)
-import DOM.HTML (window)
-import DOM.HTML.Window (innerHeight, innerWidth)
-import DOM.XML3D.Event.Types (FrameDrawnEvent)
+import DOM.XML3D.Event.Types (FrameDrawnEvent, timeStart)
 import DOM.XML3D.Indexed.AxisAngle (AxisAngle(..))
 import DOM.XML3D.Indexed.Light (LightModel(..))
 import DOM.XML3D.Indexed.Material (MatModel(..))
@@ -26,11 +21,11 @@ import DOM.XML3D.Indexed.Vec3 (Vec3(..))
 import DOM.XML3D.Indexed.View (ViewModel(..))
 import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
+import Debug.Trace (spy)
 
 type State = { mx :: Int
              , my :: Int
-             , w :: Int
-             , h :: Int
+             , t :: Number
              }
 
 data Query a = Move MouseEvent a
@@ -52,8 +47,7 @@ example =
   initialState :: State
   initialState = { mx: 0
                  , my: 0
-                 , w: 800
-                 , h: 600
+                 , t: 0.0
                  }
 
   render :: State -> H.ComponentHTML Query
@@ -65,8 +59,6 @@ example =
     [ XH.xml3d [ HS.style $ do
                     C.backgroundColor $ C.rgba 0 0 255 1.0
                     C.width $ C.pct 100.0
---               , XP.width 800
---               , XP.height 600
                , XE.onFrameDrawn (HE.input Drawn)
                ]
       [ XH.defs []
@@ -146,7 +138,7 @@ example =
            ]
       ]
     ]
-    where fx = toNumber s.mx
+    where fx = (s.t / 20.0) + toNumber s.mx
           fy = toNumber s.my
           r = fx / 512.0
           g = fy / 512.0
@@ -168,6 +160,7 @@ example =
           move (T.clientX t) (T.clientY t)
           pure next
     Drawn e next -> do
+      H.modify (_ { t = timeStart e })
       pure next
 
     where move mx my = H.modify (_ { mx = mx
