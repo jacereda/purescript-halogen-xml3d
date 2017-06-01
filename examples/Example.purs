@@ -2,6 +2,7 @@ module Example where
 
 import Prelude
 import CSS as C
+import DOM.Event.TouchEvent as T
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.CSS as HS
@@ -10,7 +11,12 @@ import Halogen.HTML.Properties as HP
 import Halogen.XML3D.Elements as XH
 import Halogen.XML3D.Events as XE
 import Halogen.XML3D.Properties as XP
+import Control.Monad.Aff (Aff)
+import DOM (DOM)
 import DOM.Event.MouseEvent (MouseEvent, clientX, clientY)
+import DOM.Event.Types (Event)
+import DOM.HTML (window)
+import DOM.HTML.Window (innerHeight, innerWidth)
 import DOM.XML3D.Event.Types (FrameDrawnEvent)
 import DOM.XML3D.Indexed.AxisAngle (AxisAngle(..))
 import DOM.XML3D.Indexed.Light (LightModel(..))
@@ -20,11 +26,15 @@ import DOM.XML3D.Indexed.Vec3 (Vec3(..))
 import DOM.XML3D.Indexed.View (ViewModel(..))
 import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
-import Halogen.HTML.Core (AttrName(..))
 
-data State = State Int Int
+type State = { mx :: Int
+             , my :: Int
+             , w :: Int
+             , h :: Int
+             }
 
 data Query a = Move MouseEvent a
+             | Touch T.TouchEvent a
              | Drawn FrameDrawnEvent a
 
 data Message = Moved Number
@@ -40,17 +50,24 @@ example =
   where
 
   initialState :: State
-  initialState = State 0 0
+  initialState = { mx: 0
+                 , my: 0
+                 , w: 800
+                 , h: 600
+                 }
 
   render :: State -> H.ComponentHTML Query
-  render (State x y) =
+  render s = 
     HH.div [ HP.class_ $ HH.ClassName "_xml3d_hideDiv"
            , HE.onMouseMove (HE.input Move)
+           , HE.onTouchMove (HE.input Touch)
            ]
-    [ XH.xml3d [ XP.width 800
-               , XP.height 600
+    [ XH.xml3d [ HS.style $ do
+                    C.backgroundColor $ C.rgba 0 0 255 1.0
+                    C.width $ C.pct 100.0
+--               , XP.width 800
+--               , XP.height 600
                , XE.onFrameDrawn (HE.input Drawn)
-               , HS.style $ C.backgroundColor $ C.rgba 0 0 255 1.0
                ]
       [ XH.defs []
         [ XH.material [ XP.id "mouseMat"
@@ -67,12 +84,13 @@ example =
                        , XP.filter $ Filter MinLinear MagLinear
                        , XP.wrap $ Wrap Clamp Clamp
                        ]
-            [ HH.video [ HP.src $ base <> "../resources/videos/nescafe.mp4"
-                       , HP.autoplay true
-                       , HP.loop true
-                       , HP.attr (AttrName "muted") "true" -- HP.muted true
-                       ] []
-            ]
+          --   -- [ HH.video [ HP.src $ base <> "../resources/videos/nescafe.mp4"
+          --   --            , HP.autoplay true
+          --   --            , HP.loop true
+          --   --            , HP.muted true
+          --   --            ] []
+          --   -- ]
+            []
           ]
         , XH.transform [ XP.id "cameraTransform"
                        , XP.translation $ Vec3 0.0 0.0 250.0
@@ -128,8 +146,8 @@ example =
            ]
       ]
     ]
-    where fx = toNumber x
-          fy = toNumber y
+    where fx = toNumber s.mx
+          fy = toNumber s.my
           r = fx / 512.0
           g = fy / 512.0
           b = r + g
@@ -141,7 +159,18 @@ example =
   eval :: Query ~> H.ComponentDSL State Query Message m
   eval = case _ of
     Move e next -> do
-      H.put $ State (clientX e) (clientY e)
+      move (clientX e) (clientY e)
       pure next
+    Touch e next -> do
+      case T.item 0 $ T.touches e of
+        Nothing -> pure next
+        Just t -> do
+          move (T.clientX t) (T.clientY t)
+          pure next
     Drawn e next -> do
       pure next
+
+    where move mx my = H.modify (_ { mx = mx
+                                   , my = my
+                                   })
+  
