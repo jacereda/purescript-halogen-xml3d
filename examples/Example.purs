@@ -147,7 +147,7 @@ example =
           b = r + g
           col = Vec3 r g b
           base = "http://xml3d.github.io/xml3d-examples/examples/"
-          base2 = "http://rawgit.com/xml3d/xml3d-examples/master/resources/assets/"
+          base2 = "http://cdn.rawgit.com/xml3d/xml3d-examples/master/resources/assets/"
           hp m = [ XH.group [ XP.transform "#headingTransform" ]
                    [ XH.group [ XP.transform "#pitchTransform" ] m ] ]
 
